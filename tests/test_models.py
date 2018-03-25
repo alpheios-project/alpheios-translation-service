@@ -61,4 +61,43 @@ class TestMiss(TestCase):
             )
 
     def test_record_misses(self):
-        """ Check that misses are """
+        """ Check that misses are registered
+        """
+        with self.app.app_context():
+            result = Miss.register_misses([
+                {"in": "lemma", "map": "map", "translations": []}
+            ], "inp", "out", client="Client")
+
+            self.assertEqual(
+                Miss.query.count(), 1,
+                "A record should have been done"
+            )
+
+    def test_record_misses_multiple(self):
+        """ Check that misses are registered but not found data
+        """
+        with self.app.app_context():
+            result = Miss.register_misses([
+                {"in": "lemma1", "map": "map", "translations": []},
+                {"in": "lemma2", "map": "map", "translations": ["hello"]},
+                {"in": "lemma3", "map": "map", "translations": []}
+            ], "inp", "out", client="Client")
+
+            self.assertEqual(
+                [(m.lemma, m.client) for m in Miss.query.all()],
+                [("lemma1", "Client"), ("lemma3", "Client")],
+                "A record should have been done"
+            )
+
+
+class TestTranslation(TestCase):
+    """ Tests for the modele Translation
+
+    """
+    def setUp(self):
+        self.app, self.db = create_app("test")
+        self.db.create_all(app=self.app)
+        self.client = self.app.test_client()
+
+    def tearDown(self):
+        self.db.drop_all(app=self.app)

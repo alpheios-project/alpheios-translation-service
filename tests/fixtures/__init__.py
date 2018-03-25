@@ -29,3 +29,10 @@ Translations = [
 #    Translation()
 ]
 
+import os
+
+FIXTURE_DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+
+def get_path(*paths):
+    return os.path.join(FIXTURE_DATA_DIR, *paths)

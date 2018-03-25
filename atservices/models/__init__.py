@@ -51,7 +51,7 @@ class Miss(db.Model):
         )
 
     @staticmethod
-    async def register_misses(results, lemma_lang, translation_lang, client=""):
+    def register_misses(results, lemma_lang, translation_lang, client=""):
         """ Register misses in the translation database
 
         :param results: List of results from Corpus.translate()
@@ -62,12 +62,12 @@ class Miss(db.Model):
         for result in results:
             if not result["translations"]:
                 db.session.add(Miss(
-                    at=datetime.datetime.now()),
+                    at=datetime.datetime.now(),
                     lemma=result["in"],
                     lemma_lang=lemma_lang,
                     translation_lang=translation_lang,
                     client=client
-                )
+                ))
         db.session.commit()
 
     @staticmethod

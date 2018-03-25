@@ -1,4 +1,10 @@
-# alpheios-translation-service
+Alpheios Translation Service
+===
+
+[![Build Status](https://travis-ci.org/alpheios-project/alpheios-translation-service.svg?branch=master)](https://travis-ci.org/alpheios-project/alpheios-translation-service)
+[![Coverage Status](https://coveralls.io/repos/github/alpheios-project/alpheios-translation-service/badge.svg?branch=master)](https://coveralls.io/github/alpheios-project/alpheios-translation-service?branch=master)
+
+
 Web Service that provides translations for lemmas
 
 ## Development
