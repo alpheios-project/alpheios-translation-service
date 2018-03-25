@@ -1,5 +1,6 @@
 from .. import db
 import datetime
+import dateparser
 
 
 class Translation(db.Model):
@@ -32,16 +33,22 @@ class Miss(db.Model):
         """
         columns = ["at", "lemma", "lemma_lang", "translation_lang", "client"]
         csv = [columns]
-        for data in Miss.query.all():
+        for data in Miss.query.order_by(Miss.at).all():
             csv.append(
                 [
-                    data.at,
+                    str(data.at),
                     data.lemma,
                     data.lemma_lang,
                     data.translation_lang,
                     data.client
                 ]
             )
+        return "\n".join(
+            [
+                "\t".join(row)
+                for row in csv
+            ]
+        )
 
     @staticmethod
     async def register_misses(results, lemma_lang, translation_lang, client=""):
@@ -68,6 +75,12 @@ class Miss(db.Model):
         """ Clear data up to today (By default) or the given date
 
         :param date: Date up to which we want to delete results
+        :type date: str
         """
-        Miss.query.filter(Miss.at <= (date or datetime.datetime.now())).remove()
+        if date:
+            Miss.query.filter(
+                Miss.at <= dateparser.parse(date)  # Should use a clear datetime parser
+            ).delete()
+        else:
+            Miss.query.delete()
 

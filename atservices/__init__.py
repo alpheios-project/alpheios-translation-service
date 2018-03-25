@@ -9,12 +9,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 db = SQLAlchemy()
 
 
-def create_app(config_name="test", config_objects=config):
+def create_app(config_name="dev", config_objects=config):
     """ Create the application and returns it's instance and DB """
     app = Flask(
         __name__
     )
-    app.config.from_object(config[config_name])
+    app.config.from_object(config_objects[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     config[config_name].init_app(app)
