@@ -2,6 +2,9 @@ from flask import jsonify
 
 
 class NoInputError(Exception):
+    """
+
+    """
     message = "Input was missing"
 
 

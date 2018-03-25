@@ -1,5 +1,4 @@
 import click
-from ..models import Translation
 from .collatinus import download_collatinus_corpora, \
                         collatinus_corpora, \
                         check_collatinus_corpora, \
@@ -64,4 +63,8 @@ def make_data_cli(cli=None, db=None):
 
     cli.add_command(download)
     cli.add_command(ingest)
+    return cli
+
+
+def make_data_survey_cli(cli=None, db=None):
     return cli

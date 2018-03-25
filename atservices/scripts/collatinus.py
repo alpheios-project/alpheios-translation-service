@@ -9,7 +9,9 @@ from ..corpora.collatinus import CollatinusCorpus
 
 
 LANGS = {
-    "eng": "lemmes.en"
+    "eng": "lemmes.en",
+    "por": "lemmes.pt",
+    "fre": "lemmes.fr",
 }
 
 basedir_collatinus = basedir, "data", "collatinus"
@@ -56,6 +58,11 @@ def check_collatinus_corpora():
 
 
 def ingest_collatinus_corpora(cli=None):
+    """ Ingest the corpora
+
+    :param cli: Class, object or models that allows to use a ".echo()" function that
+    will provide return information to the user
+    """
     for corpus in collatinus_corpora:
         count = corpus.ingest()
         if cli:

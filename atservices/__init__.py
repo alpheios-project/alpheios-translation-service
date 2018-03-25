@@ -21,7 +21,6 @@ def create_app(config_name="test", config_objects=config):
 
     # Set up extensions
     db.init_app(app)
-    #assets_env = Environment(app)
 
     # Register Jinja template functions
     from .main.latin import latin_api

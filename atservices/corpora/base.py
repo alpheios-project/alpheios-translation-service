@@ -3,6 +3,12 @@ from abc import abstractmethod
 
 
 class Corpus(object):
+    """ A corpus is both an object for treating input data and building
+    the database
+
+
+    :param lang: Language of the lemmas
+    """
     # Used for input correction
     _MAPPING_INPUT = {}
     # Used for translation correction
@@ -25,7 +31,7 @@ class Corpus(object):
     def mapping(self):
         """ For test purposes or documentation on the API
 
-        :return:
+        :return: Dictionary representation of input and OUTPUT
         """
         return {
             "in": self._MAPPING_INPUT,
