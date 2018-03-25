@@ -1,14 +1,10 @@
-from flask import Blueprint, request, url_for
+from flask import Blueprint
 from ..corpora.base import Corpus
-from ..models import Miss
-from ..errors import NoInputError
 from ..utils import generic_response
+from .base import capacities_builder, translate_builder
 
-latin_api = Blueprint(
-    'latin_api',
-    __name__,
-    url_prefix="/lat"
-)
+
+latin_api = Blueprint('latin_api', __name__, url_prefix="/lat")
 latin_corpus = Corpus("lat")
 
 
@@ -17,7 +13,7 @@ availably by http://biblissima.com/ and Collatinus"""
 
 
 def response(content):
-    """ Formating of response for JSONify
+    """ Formatting of response for JSONify
 
     :param content: Content to put to json
     :return: JSON Response
@@ -28,11 +24,8 @@ def response(content):
 
 
 @latin_api.route("/")
-def available_languages():
-    return response({
-        lang: url_for(".translate", output_lang=lang, _external=True)
-        for lang in latin_corpus.capacities
-    })
+def capacities():
+    return capacities_builder(latin_corpus, response)
 
 
 @latin_api.route("/<output_lang>")
@@ -46,14 +39,4 @@ def translate(output_lang):
 
     :return: JSON Response with the content translater
     """
-    input_sentence = request.args.get("input", None)
-    client = request.args.get("client", "")
-
-    if not input_sentence or not output_lang:
-        raise NoInputError()
-
-    words = input_sentence.split()
-    results = latin_corpus.translate(words, output_lang)
-
-    Miss.register_misses(results, "lat", output_lang, client)
-    return response(results)
+    return translate_builder(latin_corpus, output_lang, response)

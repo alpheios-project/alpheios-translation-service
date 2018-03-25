@@ -5,7 +5,7 @@ class NoInputError(Exception):
     """
 
     """
-    message = "Input was missing"
+    message = "Input was missing. Use the 'input' key word to translate lemmas, e.g. ?input=hello good-bye"
 
 
 def register_error_handler(app):
