@@ -54,3 +54,16 @@ To come
 2. You should also produce a Production Specific config object such as the ones available at `atservices.config`
 3. Finally, create a python file such as `run.py` that will be running the app through `atservices.create_app` with 
 your environment specific configuration
+
+## Current numbers
+
+- 9889 words Collatinus translation for eng
+- 57769 words Collatinus translation for eng (Extension)
+- 23912 words Collatinus translation for fre
+- 57783 words Collatinus translation for fre (Extension)
+- 9905 words Collatinus translation for por
+- 9905 words Collatinus translation for ita
+- 9526 words Collatinus translation for ger
+- 9776 words Collatinus translation for cat
+- 9925 words Collatinus translation for glg
+- 9895 words Collatinus translation for spa

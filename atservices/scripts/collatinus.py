@@ -8,18 +8,25 @@ from .. import basedir
 from ..corpora.collatinus import CollatinusCorpus
 
 
-LANGS = {
-    "eng": "lemmes.en",
-    "por": "lemmes.pt",
-    "fre": "lemmes.fr",
-}
+LANGS = [
+    ("eng", "lemmes.en"),
+    ("eng", "lem_ext.en"),
+    ("fre", "lemmes.fr"),
+    ("fre", "lem_ext.fr"),
+    ("por", "lemmes.pt"),  # Portuguese
+    ("ita", "lemmes.it"),  # Italian
+    ("ger", "lemmes.de"),  # German
+    ("cat", "lemmes.ca"),  # Catalan
+    ("glg", "lemmes.gl"),  # Galician
+    ("spa", "lemmes.es"),  # Spanish
+]
 
 basedir_collatinus = basedir, "data", "collatinus"
 
 # List of corpora from Collatinus sources
 collatinus_corpora = [
     CollatinusCorpus("lat", lang, os.path.join(*basedir_collatinus, file))
-    for lang, file in LANGS.items()
+    for lang, file in LANGS
 ]
 
 
@@ -35,7 +42,7 @@ def download_collatinus_corpora(cli=None):
         os.makedirs(base)
 
     # For each corpus of the project
-    for filename in LANGS.values():
+    for _, filename in LANGS:
         zip_path = os.path.join("collatinus-master", "bin", "data", filename)  # File in the ZIP
         extraction_path = os.path.join(base, filename)
 
