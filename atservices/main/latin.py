@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, url_for
 from ..corpora.base import Corpus
 from ..models import Miss
 from ..errors import NoInputError
@@ -25,6 +25,14 @@ def response(content):
     json = generic_response(content)
     json.headers["Thanks-To"] = latin_copyright
     return json
+
+
+@latin_api.route("/")
+def available_languages():
+    return response({
+        lang: url_for(".translate", output_lang=lang, _external=True)
+        for lang in latin_corpus.capacities
+    })
 
 
 @latin_api.route("/<output_lang>")

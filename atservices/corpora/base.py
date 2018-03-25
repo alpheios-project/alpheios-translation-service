@@ -17,6 +17,21 @@ class Corpus(object):
     def __init__(self, lang):
         self._lang = lang
 
+    @property
+    def capacities(self):
+        """ Retrieves lang that the database holds translations for
+
+        :return:
+        """
+        for lang, *_ in db.session.query(
+            Translation.translation_lang
+        ).filter(
+            Translation.lemma_lang == self.lang
+        ).group_by(
+            Translation.translation_lang
+        ).all():
+            yield lang
+
     @abstractmethod
     def ingest(self, *args, **kwargs):
         """ Ingest data from a specific file or other kind of
