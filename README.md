@@ -47,4 +47,4 @@ To come
 1. To run on production, the same installation bases are valid : create a virtual env, install dependencies from requirements.txt.
 2. You should also produce a Production Specific config object such as the ones available at `atservices.config`
 3. Finally, create a python file such as `run.py` that will be running the app through `atservices.create_app` with 
-your environement specific configuration
+your environment specific configuration

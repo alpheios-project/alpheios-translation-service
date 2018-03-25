@@ -1,4 +1,6 @@
 import click
+from ..models import Miss
+import os
 from .collatinus import download_collatinus_corpora, \
                         collatinus_corpora, \
                         check_collatinus_corpora, \
@@ -67,4 +69,27 @@ def make_data_cli(cli=None, db=None):
 
 
 def make_data_survey_cli(cli=None, db=None):
+    """ Creates a data CommandLine Interface
+    """
+    if cli is None:
+        @click.group()
+        def cli():
+            pass
+
+    @click.command("survey-dump")
+    @click.option("--dest", help="Destination of the file")
+    def dump(dest=None):
+        if not dest:
+            dest = os.path.join(".", "misses.csv")
+        with open("dest", "w") as output:
+            output.write(Miss.get_csv())
+
+    @click.command("survey-clear")
+    @click.option("--until", help="Datetime until which data needs to be cleared")
+    def clear():
+        Miss.clear_up_to()
+
+    cli.add_command(dump)
+    cli.add_command(clear)
+
     return cli

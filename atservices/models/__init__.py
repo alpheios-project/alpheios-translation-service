@@ -13,7 +13,7 @@ class Translation(db.Model):
     translation = db.Column(db.String(255), nullable=False)
 
 
-class Miss(db.model):
+class Miss(db.Model):
     """ Missed valued in the database
 
     """
@@ -21,8 +21,27 @@ class Miss(db.model):
     at = db.Column(db.DateTime)
     lemma = db.Column(db.String(255), nullable=False)
     lemma_lang = db.Column(db.String(3), nullable=False)
-    translation_lang = db.Column(db.string(3), nullable=False)
+    translation_lang = db.Column(db.String(3), nullable=False)
     client = db.Column(db.String(255))
+
+    @staticmethod
+    def get_csv():
+        """ Gets a CSV dump of the Miss table
+
+        :return: String CSV representation of the CSV
+        """
+        columns = ["at", "lemma", "lemma_lang", "translation_lang", "client"]
+        csv = [columns]
+        for data in Miss.query.all():
+            csv.append(
+                [
+                    data.at,
+                    data.lemma,
+                    data.lemma_lang,
+                    data.translation_lang,
+                    data.client
+                ]
+            )
 
     @staticmethod
     async def register_misses(results, lemma_lang, translation_lang, client=""):
