@@ -23,6 +23,12 @@ LANGS = [
 
 basedir_collatinus = basedir, "data", "collatinus"
 
+
+def change_basedir(val):
+    global basedir_collatinus
+    basedir_collatinus = val
+    return val
+
 # List of corpora from Collatinus sources
 collatinus_corpora = [
     CollatinusCorpus("lat", lang, os.path.join(*basedir_collatinus, file))
@@ -70,6 +76,12 @@ def ingest_collatinus_corpora(cli=None):
     :param cli: Class, object or models that allows to use a ".echo()" function that
     will provide return information to the user
     """
+    if not check_collatinus_corpora():
+        if cli:
+            cli.echo("[ERROR] No corpus found")
+            return
+        else:
+            raise FileNotFoundError("The corpus were not downloaded.")
     for corpus in collatinus_corpora:
         count = corpus.ingest()
         if cli:
