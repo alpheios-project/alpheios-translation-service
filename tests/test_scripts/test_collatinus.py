@@ -4,6 +4,8 @@ import shutil
 import requests_cache
 
 
+from atservices.corpora.base import Corpus
+
 # Using a requests cache to speed up ZIP downloading routines
 requests_cache.install_cache("demo_cache")
 
@@ -102,3 +104,9 @@ class TestCollatinusScripts(TestCase):
             ingest_collatinus_corpora()
             # Need to figure what to test here.
             # Length of lemmas would be stupid because data can change.
+            # So I decided on testing langs
+            latin_corpus = Corpus("lat")
+            self.assertEqual(
+                sorted(list(latin_corpus.capacities)),
+                sorted(list(["eng", "fre", "por", "ita", "ger", "cat", "glg", "spa"]))
+            )
