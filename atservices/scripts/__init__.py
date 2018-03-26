@@ -2,7 +2,6 @@ import click
 from ..models import Miss
 import os
 from .collatinus import download_collatinus_corpora, \
-                        collatinus_corpora, \
                         check_collatinus_corpora, \
                         ingest_collatinus_corpora
 

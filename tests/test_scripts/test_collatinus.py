@@ -61,7 +61,7 @@ class TestCollatinusScripts(TestCase):
         download_collatinus_corpora(cli=self.QuickMock)
 
         self.assertEqual(
-            len(TestCollatinusScripts.calls), len(collatinus_corpora)
+            len(TestCollatinusScripts.calls), len(collatinus_corpora())
         )
         self.assertEqual(
             check_collatinus_corpora(), True,

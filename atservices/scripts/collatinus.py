@@ -29,11 +29,13 @@ def change_basedir(val):
     basedir_collatinus = val
     return val
 
-# List of corpora from Collatinus sources
-collatinus_corpora = [
-    CollatinusCorpus("lat", lang, os.path.join(*basedir_collatinus, file))
-    for lang, file in LANGS
-]
+
+def collatinus_corpora():  # List of corpora from Collatinus sources
+    global basedir_collatinus
+    return [
+        CollatinusCorpus("lat", lang, os.path.join(*basedir_collatinus, file))
+        for lang, file in LANGS
+    ]
 
 
 def download_collatinus_corpora(cli=None):
@@ -67,7 +69,7 @@ def check_collatinus_corpora():
     """
 
     downloaded = glob.glob(os.path.join(*basedir_collatinus, "*"))
-    return len(downloaded) == len(collatinus_corpora)
+    return len(downloaded) == len(collatinus_corpora())
 
 
 def ingest_collatinus_corpora(cli=None):
@@ -82,7 +84,7 @@ def ingest_collatinus_corpora(cli=None):
             return
         else:
             raise FileNotFoundError("The corpus were not downloaded.")
-    for corpus in collatinus_corpora:
+    for corpus in collatinus_corpora():
         count = corpus.ingest()
         if cli:
             cli.echo(
