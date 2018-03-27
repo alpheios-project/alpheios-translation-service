@@ -44,9 +44,9 @@ For an example, look at `atservices.main.latin` for the full blueprint and `atse
             in `atservices.scripts.collatinus`-likes modules
         - data and usage survey : `atservices.scripts.make_data_survey_cli()`
         
-### Tests 
+### Client
 
-To come
+A Swagger 2.0 configuration can be found at [swagger.spec.yaml](swagger.spec.yaml)
 
 ## Running on production
 

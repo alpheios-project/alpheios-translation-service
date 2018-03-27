@@ -36,10 +36,10 @@ class TestLatinBlueprint(TestCase):
         data = json.loads(response.data.decode())
         self.assertEqual(
             data,
-            {
-                "unk": main_url+"/unk",
-                "fre": main_url+"/fre"
-            },
+            [
+                {"lang": "unk", "uri": main_url+"/unk"},
+                {"lang": "fre", "uri": main_url+"/fre"}
+            ],
             "Routes should reflect available corpora"
         )
 
@@ -60,7 +60,7 @@ class TestLatinBlueprint(TestCase):
     def test_lemmatisation_route(self):
         """ Test the lemmatisation service route """
 
-        results = self.client.get("/lat/fre?input=abacus abalieno a&client=ZERO")
+        results = self.client.get("/lat/fre?input=abacus,abalieno,a&client=ZERO")
         data = json.loads(results.data.decode())
 
         self.assertEqual(

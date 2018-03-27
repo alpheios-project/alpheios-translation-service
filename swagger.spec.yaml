@@ -1,0 +1,116 @@
+swagger: "2.0"
+info:
+  description: "This is a simple translation API that offers descriptions for lemma in different languages"
+  version: "0.0.1"
+  title: "Alpheios Translation Service"
+  license:
+    name: "Mozilla Public License 2.0"
+    url: "hhttps://www.mozilla.org/en-US/MPL/2.0/"
+tags:
+- name: "TranslationInterface"
+  description: "A translation service portal"
+schemes:
+- "http"
+paths:
+  /{inputLang}:
+    get:
+      tags:
+      - "TranslationInterface"
+      summary: "List available input languages"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "inputLang"
+        in: "path"
+        description: "Language Code (3 Chars) of the language in which lemma are provided"
+        required: true
+        type: "string"
+      operationId: "getLanguageCapacities"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/TranslationInterface"
+        404:
+          description: "Unsupported language"
+        default:
+          description: "Error Payload"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /{inputLang}/{outputLang}:
+    get:
+      tags:
+      - "TranslationInterface"
+      summary: "Provides translations mapping"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "inputLang"
+        in: "path"
+        description: "Language Code (3 Chars) of the language in which lemma are provided"
+        required: true
+        type: "string"
+      - name: "outputLang"
+        in: "path"
+        description: "Language Code (3 Chars) of the language in which we want translations"
+        required: true
+        type: "string"
+      - name: "input"
+        in: "query"
+        description: "Comma separated lemmas that need translations"
+        required: true
+        type: "string"
+      - name: "client"
+        in: "query"
+        description: "Name of the lemma provider the client is using (For data improvement)"
+        required: false
+        type: "string"
+      operationId: "getTranslation"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Translation"
+        404:
+          description: "Unsupported language"
+        400:
+          description: "Missing input"
+        default:
+          description: "Error Payload"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+definitions:
+  Translation:
+    type: "object"
+    properties:
+      in:
+        type: "string"
+        description: "Input value given by the user"
+      map:
+        type: "string"
+        description: "Input-mapping done by the service"
+      translations:
+        type: "array"
+        description: "List of translations found by the service"
+        items:
+          type: "string"
+  TranslationInterface:
+    type: "object"
+    properties:
+      lang:
+        type: "string"
+      uri:
+        description: "URI of the translation Interface"
+        type: "string"
+  ErrorModel:
+    type: "string"
+    properties:
+      message:
+        type: "string"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
