@@ -14,6 +14,7 @@ def make_db_cli(cli=None, db=None):
     :type db: flask_sqlalchemy.
     :return: Click instance
     """
+
     if cli is None:
         @click.group()
         def cli():
@@ -54,7 +55,7 @@ def make_data_cli(cli=None, db=None):
     @click.option("--force", is_flag=True, help="Force download the resources")
     def download(force=False):
         click.echo('Downloading Collatinus corpora')
-        if force or check_collatinus_corpora():
+        if force or not check_collatinus_corpora():
             download_collatinus_corpora(click)
 
     @click.command("data-ingest")
