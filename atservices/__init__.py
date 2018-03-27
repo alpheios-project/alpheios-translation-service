@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+from .utils import NonEscapingJsonEncoder
 from .config import config
 from .errors import register_error_handler
 
@@ -28,5 +29,7 @@ def create_app(config_name="dev", config_objects=config):
 
     # Register error handler
     register_error_handler(app)
+
+    app.json_encoder = NonEscapingJsonEncoder
 
     return app, db

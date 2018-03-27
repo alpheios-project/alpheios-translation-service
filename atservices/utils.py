@@ -1,4 +1,12 @@
 from flask import jsonify
+from flask.json import JSONEncoder
+
+
+class NonEscapingJsonEncoder(JSONEncoder):
+    """ This encoders avoid escaping UTF8 characted (eg. é into \u0133)"""
+    def __init__(self, **kwargs):
+        kwargs['ensure_ascii'] = False
+        super(NonEscapingJsonEncoder, self).__init__(**kwargs)
 
 
 def generic_response(content):

@@ -35,10 +35,12 @@ class TestLatinBlueprint(TestCase):
         response = self.client.get("/lat/")
         data = json.loads(response.data.decode())
         self.assertEqual(
-            data,
+
+            sorted(data, key=lambda item: item["lang"]),
+            # Test results should be ordered by item.lang
             [
-                {"lang": "unk", "uri": main_url+"/unk"},
-                {"lang": "fre", "uri": main_url+"/fre"}
+                {"lang": "fre", "uri": main_url+"/fre"},
+                {"lang": "unk", "uri": main_url+"/unk"}
             ],
             "Routes should reflect available corpora"
         )

@@ -5,6 +5,7 @@ __pycache__/
 *.sqlite
 atservices/data/*
 test_data
+*.sqlite-journal
 
 # PyCharm
 .idea/
