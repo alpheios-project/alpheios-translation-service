@@ -6,7 +6,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    APP_NAME = 'Pandora PostCorrection Editor'
+    APP_NAME = 'Alpheios Translation Service'
     if os.environ.get('SECRET_KEY'):
         SECRET_KEY = os.environ.get('SECRET_KEY')
     else:
