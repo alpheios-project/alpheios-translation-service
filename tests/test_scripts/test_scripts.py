@@ -3,6 +3,7 @@ just check that these function are called, not that they have the right effect. 
 function should be done in their respective test modules (see .test_collatinus)
 
 """
+import os
 
 from unittest import TestCase
 from click.testing import CliRunner
@@ -16,6 +17,9 @@ from atservices.scripts import (
     make_data_cli
 )
 from atservices.models import Translation
+
+
+from ..fixtures import insert_misses
 
 
 class TestDataScript(TestCase):
@@ -173,3 +177,89 @@ class TestDBScript(TestCase):
                 len(Translation.query.all()), 0,
                 "There should have been 0 insert"
             )
+
+
+class TestSurveyScript(TestCase):
+    """ Tests for the Survey Scripts
+     """
+
+    def setUp(self):
+        self.app, self.db = create_app("test")
+
+        self.cli = make_data_cli(db=self.db)
+        make_db_cli(cli=self.cli, db=self.db)
+        make_data_survey_cli(cli=self.cli, db=self.db)
+
+        self.runner = CliRunner()
+
+        with self.app.app_context():
+            self.db.create_all()
+            self.db.session.commit()
+
+            insert_misses(self.db)
+
+    def tearDown(self):
+        with self.app.app_context():
+            self.db.drop_all()
+
+    def invoke(self, commands):
+        with self.app.app_context():
+            return self.runner.invoke(self.cli, commands)
+
+    def test_dump(self):
+        """ Test that dumping to CSV works """
+        with self.runner.isolated_filesystem() as fs:
+
+            self.invoke(["survey-dump"])
+
+            with open(os.path.join(fs, "misses.csv")) as f:
+                self.assertEqual(
+                    f.read(),
+                    """at	lemma	lemma_lang	translation_lang	client
+2018-01-01 19:00:00	lascivus	lat	fre	Collatinus-Lemmatize
+2018-01-01 20:00:00	appétit	fre	eng	Bocuse
+2018-01-01 21:00:00	bbq	eng	fre	They"""
+                )
+
+    def test_dump_specific_file(self):
+        """ Test that dumping to CSV works with a specified filename """
+        with self.runner.isolated_filesystem() as fs:
+
+            self.invoke(["survey-dump", "--dest", "fake.csv"])
+
+            with open(os.path.join(fs, "fake.csv")) as f:
+                self.assertEqual(
+                    f.read(),
+                    """at	lemma	lemma_lang	translation_lang	client
+2018-01-01 19:00:00	lascivus	lat	fre	Collatinus-Lemmatize
+2018-01-01 20:00:00	appétit	fre	eng	Bocuse
+2018-01-01 21:00:00	bbq	eng	fre	They"""
+                )
+
+    def test_clear(self):
+        """ Test that clearing Misses works"""
+        with self.runner.isolated_filesystem() as fs:
+
+            self.invoke(["survey-clear"])
+            self.invoke(["survey-dump"])
+
+            with open(os.path.join(fs, "misses.csv")) as f:
+                self.assertEqual(
+                    f.read(),
+                    """at	lemma	lemma_lang	translation_lang	client"""
+                )
+
+    def test_clear_until(self):
+        """ Test that clearing Misses until a specific datetime works"""
+        with self.runner.isolated_filesystem() as fs:
+
+            self.invoke(["survey-clear", '--until', '"2018-01-01 19:59:00"'])
+            self.invoke(["survey-dump"])
+
+            with open(os.path.join(fs, "misses.csv")) as f:
+                self.assertEqual(
+                    f.read(),
+                    """at	lemma	lemma_lang	translation_lang	client
+2018-01-01 20:00:00	appétit	fre	eng	Bocuse
+2018-01-01 21:00:00	bbq	eng	fre	They"""
+                )

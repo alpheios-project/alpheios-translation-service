@@ -81,13 +81,19 @@ def make_data_survey_cli(cli=None, db=None):
     def dump(dest=None):
         if not dest:
             dest = os.path.join(".", "misses.csv")
-        with open("dest", "w") as output:
+
+        with open(dest, "w") as output:
             output.write(Miss.get_csv())
+        click.echo("CSV written")
 
     @click.command("survey-clear")
     @click.option("--until", help="Datetime until which data needs to be cleared")
-    def clear():
-        Miss.clear_up_to()
+    def clear(until=None):
+        if until:
+            click.echo("Clear missed data until " + until)
+        else:
+            click.echo("Clearing all missed data")
+        Miss.clear_up_to(until)
 
     cli.add_command(dump)
     cli.add_command(clear)
