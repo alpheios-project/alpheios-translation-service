@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 from .utils import NonEscapingJsonEncoder
 from .config import config
@@ -15,6 +16,7 @@ def create_app(config_name="dev", config_objects=config):
     app = Flask(
         __name__
     )
+    CORS(app)
     app.config.from_object(config_objects[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
