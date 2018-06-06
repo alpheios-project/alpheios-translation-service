@@ -57,6 +57,7 @@ your environment specific configuration
 
 ## Current numbers
 
+[Collatinus](https://github.com/biblissima/collatinus) Translations
 - 9889 words Collatinus translation for eng
 - 57769 words Collatinus translation for eng (Extension)
 - 23912 words Collatinus translation for fre
