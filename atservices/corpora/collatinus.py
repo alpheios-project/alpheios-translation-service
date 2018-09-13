@@ -1,5 +1,6 @@
 from .base import Corpus
 from ..models import Translation, db
+import re
 
 
 class CollatinusCorpus(Corpus):
@@ -10,18 +11,28 @@ class CollatinusCorpus(Corpus):
         self.source_file = source_file
 
     @staticmethod
-    def _make_token(line):
+    def _make_tokens(line):
         """ Creates a token dictionary for a given line of Collatinus data
 
         :param line: Line from collatinus data
         :return: Dictionary with separated value for the token translation
         """
         line = line.split("!")[0].split(":")
-        lemma, translation = line[0], ":".join(line[1:])
-        return {
-            "translation": translation,
-            "lemma": lemma
-        }
+        lemma, details = line[0], ":".join(line[1:])
+        # some translations can be split into multiple
+        translations = re.split(r'\d\s*[-\.]\s*',details)
+        tokens = []
+        for translation in translations:
+            if translation:
+                # clean up any trailing definition separators
+                clean = re.sub(r'\s*-\s*$','',translation)
+                tokens.append(
+                    {
+                        "translation": clean,
+                        "lemma": lemma
+                        }
+                        )
+        return tokens
 
     def ingest(self):
         """ Ingest given file and store its content for given lang
@@ -37,11 +48,13 @@ class CollatinusCorpus(Corpus):
                 #   - a colon : is separating translation and lang
                 if not line.startswith("!")\
                         and ":" in line:
-                    db.session.add(Translation(
-                        translation_lang=self.translation_lang,
-                        lemma_lang=self.lang,
-                        **self._make_token(line)
-                    ))
-                    registered += 1
+                    tokens = self._make_tokens(line)
+                    for token in tokens:
+                        db.session.add(Translation(
+                            translation_lang=self.translation_lang,
+                            lemma_lang=self.lang,
+                            **token
+                            ))
+                        registered += 1
         db.session.commit()
         return registered

@@ -49,8 +49,8 @@ class TestCollatinusCorpus(TestCase):
             )
 
             self.assertEqual(
-                Translation.query.count(), 2,
-                "Only two lemma should have been recorded"
+                Translation.query.count(), 9,
+                "Only nine lemma should have been recorded"
             )
 
     def test_ingest_double_translation(self):
@@ -93,7 +93,27 @@ class TestCollatinusCorpus(TestCase):
                 "Lemmatisation of ingested data should be possible"
             )
 
+            results = corpus.translate(["absolutio"], "fre")
             self.assertEqual(
-                Translation.query.count(), 4,
-                "Only two lemma should have been recorded"
+                results,
+                [
+                    {"in": "absolutio", "map": "absolutio",
+                     "translations": ["l'assoluzione","il completamento, la perfezione,","l'esattezza"]}
+                ],
+                "Translations should be split"
+           )
+
+            self.assertEqual(
+               Translation.query.count(), 11,
+                "Only eleven lemma should have been recorded"
             )
+
+            results = corpus.translate(["absis"], "fre")
+            self.assertEqual(
+                results,
+                [
+                    {"in": "absis", "map": "absis",
+                     "translations": ["la volta, l'arco.", "l'abside.", "un piatto cavo.", "l'orbita, strada descrive da un pianeta,"]}
+                ],
+                "Translations should be split"
+           )
