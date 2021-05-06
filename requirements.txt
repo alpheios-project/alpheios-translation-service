@@ -17,4 +17,4 @@ SQLAlchemy==1.2.5
 tzlocal==1.5.1
 urllib3==1.22
 Werkzeug==0.14.1
-flask-cors==3.0.3
+flask-cors==3.0.9
